@@ -1,0 +1,3 @@
+[submodule "ShipSmart/laradock"]
+	path = ShipSmart/laradock
+	url = https://github.com/Laradock/laradock.git
