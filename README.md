@@ -1,62 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# ShipSmart Brasil 
+![ShipSmart Brasil ](https://media-exp1.licdn.com/dms/image/C560BAQE4pYIVpVz9PQ/company-logo_200_200/0/1519891792855?e=1623283200&v=beta&t=tTaiGw9bUyNTifVJLAKX8_L4MEbVeX6VvSjreI4lcU4 "")
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project was build having in mind the test proposed by the ShipSmart team.
 
-## About Laravel
+### Starting
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The objective of this guide is to help you have a 100% working copy of this project.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+I am using Linux. If you are on Windows OS, there is no need to run 'sudo' in the commands provided below.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Requirement
 
-## Learning Laravel
+To run this project you only need [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Installing
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+To install Docker, please follow the instructions on this website:
 
-## Laravel Sponsors
+* [Docker](https://www.docker.com/get-started) - Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers. Containers are
+  isolated from one another and bundle their own software, libraries and configuration files; they can communicate with each other through well-defined channels.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Also install:
 
-### Premium Partners
+* [Docker Compose](https://docs.docker.com/compose/install/) - Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your
+  application’s services. Then, with a single command, you create and start all the services from your configuration.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+## Running the Project
 
-## Contributing
+First, open a terminal at the project root folder (ShipSmart) and run:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```npm install```
 
-## Code of Conduct
+Inside this project there is a folder called [Laradock](http://laradock.io/). Laradock is a full PHP development environment for Docker.
+Let's start a few containers needed to run our project.
+Open a terminal into that folder and type: (be aware, this will take a while)
+``` 
+sudo docker-compose up -d nginx mysql phpmyadmin
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Enter in our project workspace. Type at this same terminal:
 
-## Security Vulnerabilities
+```sudo docker-compose exec --user=laradock workspace bash```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Now run
 
-## License
+```composer install && npm run dev```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Create the database using the phpmyadmin docker container, it needs to be in ```utf8mb4_unicode_ci```. Visit ```localhost:1010``` to access PhpMyAdmin.
+
+Now make a copy of the ```.env.example``` file inside the root folder and call it just ```.env```
+
+Edit you .env file with the database name.
+
+In order to be able to use the credit card payment at the payment screen,
+you must create a stripe account, access your test dashboard and get some values into our .env file.
+
+Now got back to our open terminal and run the migration and seeding. You will have a few data into your database already. Type:
+
+```php artisan migrate && php artisan db:seed```
+
+To access the server, please enter this ip address at your browser:
+```localhost:8888```
+
+### Observations
+If for any reason you are unable to access phpmyadmin, try to 'down' your docker containers with ```sudo docker-compose down```
+and up again with ```sudo docker-compose up -d nginx mysql phpmyadmin```. This is a particularity i found, could be only on my system
+but who knows, right? (:
+
+### Project Screenshots
+
+Here is the Landing page. The first Page the user will see upon entering our store.
+Few products are random generated with a base image, categories, name, description and price.
+
+![Landing Page](https:// "")
+https://media-exp1.licdn.com/dms/image/C560BAQE4pYIVpVz9PQ/company-logo_200_200/0/1519891792855?e=1623283200&v=beta&t=tTaiGw9bUyNTifVJLAKX8_L4MEbVeX6VvSjreI4lcU4
+
+Upon clicking at an item, this page with details of the product will open. Here you can add the item to your cart.
+Here in this screenshot I have already added a couple items to our cart.
+![Product page](https:// "")
+
+![Cart page](https:// "")
+
+The Login Page. Here the admin can log in or use the provided link to create a admin account.
+![Login page](https:// "")
+
+This is the Register Page. An admin can use it to create an account and log in on the system right after.
+![Register page](https:// "")
+
+## Built with
+
+* [Vue](https://vuejs.org/) - Frontend framework
+* [TailwindCSS](https://tailwindcss.com/) - CSS framework
+* [Laravel](https://laravel.com/) - Backend framework
+* [Docker](https://www.docker.com/get-started) - Containerization
+* [Composer](https://getcomposer.org/) - Dependency manager
+* [Docker Compose](https://docs.docker.com/compose/install/) - Tool for Docker
+* [MySQL](https://www.mysql.com/) - Database
+* [MySQL](https://www.mysql.com/) - Database
+
+## Versioning
+
+Used [GitHub](https://github.com/) for version control.
+
+## Autor
+
+* **Nylo Figueira Pinto** - *Projeto inicial* - [mastercoy](https://github.com/mastercoy)
+
+## Final Thoughts
+
+* Thank you very much [](https://) and []() for the opportunity
+
+
